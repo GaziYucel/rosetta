@@ -183,6 +183,9 @@ class RosettaDCDom extends DOMDocument
 	{
 		$node = $this->createElement('dc:identifier', htmlspecialchars(
 			'DOI:' . $this->publication->getStoredPubId('doi'), ENT_COMPAT, 'UTF-8'));
+		$typeAttribute = $this->createAttribute('xsi:type');
+		$typeAttribute->value ='URI' ;
+		$node->appendChild($typeAttribute);
 
 		$this->record->appendChild($node);
 	}

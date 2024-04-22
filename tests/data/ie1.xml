@@ -11,7 +11,7 @@
 					<dc:creator>author-firstname author-lastname</dc:creator>
 					<dc:date>2023-12-25</dc:date>
 					<!--dcterms:isPartOf>Open Access E-Journals/TIB OP/JPKJPK/2014/1/1/</dcterms:isPartOf-->
-					<dc:identifier>DOI:</dc:identifier>
+					<dc:identifier xsi:type="URI">DOI:</dc:identifier>
 					<dc:publisher>Publisher</dc:publisher>
 					<dc:language>en-US</dc:language>
 					<dc:identifier xsi:type="dcterms:ISSN">2747-9986</dc:identifier>
@@ -84,13 +84,13 @@
 					<dnx xmlns="http://www.exlibrisgroup.com/dps/dnx">
 						<section id="generalFileCharacteristics">
 							<record>
-								<key id="fileOriginalPath">/journal-path-9-v1/content/streams/MASTER/6226a2f072fd1.pdf</key>
+								<key id="fileOriginalPath">/journal-path-9-v1/content/streams/MASTER/655858c94c124.pdf</key>
 							</record>
 						</section>
 						<section id="fileFixity">
 							<record>
 								<key id="fixityType">MD5</key>
-								<key id="fixityValue">ab60d29270250992281cd480770f0685</key>
+								<key id="fixityValue">77ccfb2076aaf7edd03a3701126d510e</key>
 							</record>
 						</section>
 					</dnx>
@@ -101,7 +101,7 @@
 	<mets:fileSec>
 		<mets:fileGrp ID="rep1" ADMID="rep1-amd">
 			<mets:file ID="fid1-1" ADMID="fid1-1-amd">
-				<mets:FLocat xmlns:xlink="http://www.w3.org/1999/xlink" LOCTYPE="URL" xlink:href="file://MASTER/6226a2f072fd1.pdf" />
+				<mets:FLocat xmlns:xlink="http://www.w3.org/1999/xlink" LOCTYPE="URL" xlink:href="file://MASTER/655858c94c124.pdf" />
 			</mets:file>
 		</mets:fileGrp>
 	</mets:fileSec>

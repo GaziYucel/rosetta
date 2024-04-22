@@ -56,7 +56,7 @@ class RosettaDCDom extends DOMDocument
 
 		$this->createPublishedDate();
 
-		$this->createIssue($acronym);
+		$this->createIssue();
 
 		$this->createAbstracts();
 
@@ -132,15 +132,15 @@ class RosettaDCDom extends DOMDocument
 	}
 
 	/**
-	 * @param mixed $acronym
 	 * @return void
 	 */
-	public function createIssue(mixed $acronym): void
+	public function createIssue(): void
 	{
+		$issn = $this->context->getData('onlineIssn');
 		$issueDao = DAORegistry::getDAO('IssueDAO');
 		$issue = $issueDao->getById($this->publication->getData('issueId'), $this->context->getId());
 		if ($issue) {
-			$rosettaIssue = 'Open Access E-Journals/TIB OP/' . $acronym . '/' . $issue->getData('year') . '/' .
+			$rosettaIssue = 'Open Access E-Journals/TIB OP/' . $issn . '/' . $issue->getData('year') . '/' .
 				$issue->getData('volume') . '/' . $issue->getData('id') . '/';
 			$this->createQualifiedElement('dcterms:isPartOf', $rosettaIssue);
 		}
@@ -219,7 +219,9 @@ class RosettaDCDom extends DOMDocument
 
 	public function createLicenseURL(): void
 	{
-		if ($this->context->getData('licenseUrl')) {
+		if ($this->publication->getData('licenseUrl')) {
+			$this->createQualifiedElement('dc:rights', $this->publication->getData('licenseUrl'));}
+		elseif ($this->context->getData('licenseUrl')) {
 			$this->createQualifiedElement('dc:rights', $this->context->getData('licenseUrl'));
 		}
 	}

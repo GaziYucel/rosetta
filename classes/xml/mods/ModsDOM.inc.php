@@ -94,8 +94,8 @@ class ModsDOM extends DOMDocument
 		$this->record->setAttributeNS('http://www.w3.org/2000/xmlns/',
 			'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 		$this->record->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance',
-			'schemaLocation', 'http://www.loc.gov/standards/mods/v3/mods-3-7.xsd');
-		$this->record->setAttribute('version', '3.7');
+			'schemaLocation', 'http://www.loc.gov/standards/mods/v3/mods-3-6.xsd');
+		$this->record->setAttribute('version', '3.6');
 		$this->appendChild($this->record);
 	}
 

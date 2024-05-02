@@ -134,6 +134,9 @@ class ModsDOM extends DOMDocument
 
 		if (strlen($locale) > 0) {
 			$langAttr = $this->createAttribute('xml:lang');
+			if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
+				$locale = $matches[1];  // Outputs: en
+			}
 			$langAttr->value = $locale;
 			$node->appendChild($langAttr);
 		}
@@ -158,6 +161,8 @@ class ModsDOM extends DOMDocument
 		foreach ($authors as $author) {
 			$nameDom = $this->createElementNS(MODS_NS, 'mods:name');
 			foreach ($this->supportedFormLocales as $locale) {
+
+
 				// namePart
 				$authorGivenNameEmpty = !array_filter(array_values($author->getData('givenName')));
 				$authorType = ($authorGivenNameEmpty) ? 'corporate' : 'personal';
@@ -165,13 +170,20 @@ class ModsDOM extends DOMDocument
 				if (array_key_exists($locale, $author->getData('familyName'))) {
 					$familyNamePartDom = $this->createElementNS(MODS_NS, 'namePart',
 						$author->getData('familyName')[$locale]);
-					$familyNamePartDom->setAttribute('xml:lang', $locale);
+					if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
+						$shortLocale =  $matches[1];  // Outputs: en
+					}
+					$familyNamePartDom->setAttribute('xml:lang', $shortLocale);
 					$familyNamePartDom->setAttribute('type', 'family');
 					$nameDom->appendChild($familyNamePartDom);
 				}
 				if (array_key_exists($locale, $author->getData('givenName'))) {
-					$givenNamePartDom = $this->createElementNS(MODS_NS, 'namePart',
-						$author->getData('givenName')[$locale]);
+
+					$givenNamePartDom = $this->createElementNS(MODS_NS, 'namePart', $author->getData('givenName')[$locale]);
+					if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
+						$locale = $matches[1];  // Outputs: en
+					}
+
 					$givenNamePartDom->setAttribute('xml:lang', $locale);
 					$givenNamePartDom->setAttribute('type', 'given');
 					$nameDom->appendChild($givenNamePartDom);
@@ -204,6 +216,9 @@ class ModsDOM extends DOMDocument
 		$data = $dataProvider->getData($orig);
 		if (gettype($data) == 'array') {
 			foreach ($data as $locale => $entry) {
+				if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
+					$locale= $matches[1];  // Outputs: en
+				}
 				$elemName = (strlen($new) > 0) ? $new : $orig;
 				if (gettype($entry) == 'string') {
 					$newElement = $this->createElementNS(MODS_NS, $elemName,
@@ -238,6 +253,9 @@ class ModsDOM extends DOMDocument
 	{
 		$userGroup = $author->getUserGroup();
 		if ($userGroup) {
+			if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
+				$locale= $matches[1];  // Outputs: en
+			}
 			$role = $this->createElementNS(MODS_NS, 'mods:role');
 			$roleTerm = $this->createElementNS(MODS_NS, 'mods:roleTerm', $userGroup->getName($locale));
 			$roleTerm->setAttribute('xml:lang', $locale);
@@ -294,9 +312,12 @@ class ModsDOM extends DOMDocument
 		foreach ($elementNames as $elementName) {
 			$data = $context->getData($elementName);
 			if ($data) {
-				foreach ($data as $lang => $value) {
+				foreach ($data as $locale => $value) {
+					if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
+						$locale = $matches[1];  // Outputs: en
+					}
 					$elem = $this->createElement($elementName, $value);
-					$elem->setAttribute('xml:lang', $lang);
+					$elem->setAttribute('xml:lang', $locale);
 					$extension->appendChild($elem);
 				}
 			}

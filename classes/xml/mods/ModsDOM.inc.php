@@ -135,7 +135,7 @@ class ModsDOM extends DOMDocument
 		if (strlen($locale) > 0) {
 			$langAttr = $this->createAttribute('xml:lang');
 			if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-				$locale = $matches[1];  // Outputs: en
+				$locale = $matches[1];
 			}
 			$langAttr->value = $locale;
 			$node->appendChild($langAttr);
@@ -171,7 +171,7 @@ class ModsDOM extends DOMDocument
 					$familyNamePartDom = $this->createElementNS(MODS_NS, 'namePart',
 						$author->getData('familyName')[$locale]);
 					if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-						$shortLocale =  $matches[1];  // Outputs: en
+						$shortLocale =  $matches[1];
 					}
 					$familyNamePartDom->setAttribute('xml:lang', $shortLocale);
 					$familyNamePartDom->setAttribute('type', 'family');
@@ -181,7 +181,7 @@ class ModsDOM extends DOMDocument
 
 					$givenNamePartDom = $this->createElementNS(MODS_NS, 'namePart', $author->getData('givenName')[$locale]);
 					if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-						$locale = $matches[1];  // Outputs: en
+						$locale = $matches[1];
 					}
 
 					$givenNamePartDom->setAttribute('xml:lang', $locale);
@@ -217,7 +217,7 @@ class ModsDOM extends DOMDocument
 		if (gettype($data) == 'array') {
 			foreach ($data as $locale => $entry) {
 				if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-					$locale= $matches[1];  // Outputs: en
+					$locale= $matches[1];
 				}
 				$elemName = (strlen($new) > 0) ? $new : $orig;
 				if (gettype($entry) == 'string') {
@@ -254,7 +254,7 @@ class ModsDOM extends DOMDocument
 		$userGroup = $author->getUserGroup();
 		if ($userGroup) {
 			if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-				$locale= $matches[1];  // Outputs: en
+				$locale= $matches[1];
 			}
 			$role = $this->createElementNS(MODS_NS, 'mods:role');
 			$roleTerm = $this->createElementNS(MODS_NS, 'mods:roleTerm', $userGroup->getName($locale));
@@ -314,7 +314,7 @@ class ModsDOM extends DOMDocument
 			if ($data) {
 				foreach ($data as $locale => $value) {
 					if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-						$locale = $matches[1];  // Outputs: en
+						$locale = $matches[1];
 					}
 					$elem = $this->createElement($elementName, $value);
 					$elem->setAttribute('xml:lang', $locale);

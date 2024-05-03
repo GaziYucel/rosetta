@@ -61,6 +61,7 @@ class TestSubmission extends Submission
 		$this->setData('sponsor', 'article-sponsor', $this->getSubmissionLocale());
 		$this->setData('pub-id::doi', 'article-doi');
 		$this->setData('locale','en_US');
+
 		$this->setSectionId(1);
 		//$this->createGalleys();
 

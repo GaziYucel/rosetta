@@ -106,10 +106,7 @@ class ModsDOM extends DOMDocument
 		if ($titles) {
 			foreach ($titles as $lang => $title) {
 				$prefix = $this->publication->getData('prefix');
-				if (!is_null($prefix) and array_key_exists($lang, $prefix)) {
-					$title = $prefix[$lang] . ' ' . $title;
-				}
-				$titleDom = $this->createLocalizedElement($title, 'title', $lang);
+				$titleDom = $this->createModsElement($title, 'title', $lang);
 				$titleInfo->appendChild($titleDom);
 				$this->record->appendChild($titleInfo);
 			}
@@ -117,14 +114,14 @@ class ModsDOM extends DOMDocument
 		$subTitles = $this->publication->getData('subtitle');
 		if ($subTitles) {
 			foreach ($subTitles as $lang => $subTitle) {
-				$subTitle = $this->createLocalizedElement($subTitle, 'subTitle', $lang);
+				$subTitle = $this->createModsElement($subTitle, 'subTitle', $lang);
 				$titleInfo->appendChild($subTitle);
 				$this->record->appendChild($titleInfo);
 			}
 		}
 	}
 
-		private function createLocalizedElement(string $value, string $qualifiedName, string $locale = ''): DOMElement
+		private function createModsElement(string $value, string $qualifiedName, string $locale = ''): DOMElement
 	{
 		$node = $this->createElementNS(MODS_NS, $qualifiedName);
 
@@ -138,7 +135,7 @@ class ModsDOM extends DOMDocument
 				$locale = $matches[1];
 			}
 			$langAttr->value = $locale;
-			$node->appendChild($langAttr);
+			//$node->appendChild($langAttr);
 		}
 
 		return $node;
@@ -149,7 +146,7 @@ class ModsDOM extends DOMDocument
 		$abstracts = $this->publication->getData('abstract');
 		if ($abstracts) {
 			foreach ($abstracts as $lang => $abstract) {
-				$abstractDom = $this->createLocalizedElement($abstract, 'abstract', $lang);
+				$abstractDom = $this->createModsElement($abstract, 'abstract', $lang);
 				$this->record->appendChild($abstractDom);
 			}
 		}
@@ -216,27 +213,22 @@ class ModsDOM extends DOMDocument
 		$data = $dataProvider->getData($orig);
 		if (gettype($data) == 'array') {
 			foreach ($data as $locale => $entry) {
-				if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-					$locale= $matches[1];
-				}
 				$elemName = (strlen($new) > 0) ? $new : $orig;
 				if (gettype($entry) == 'string') {
 					$newElement = $this->createElementNS(MODS_NS, $elemName,
 						htmlspecialchars($entry, ENT_XHTML, 'UTF-8'));
-					$newElement->setAttribute('xml:lang', $locale);
 					$this->setAllAttributes($attrs, $newElement, $parent);
 				}
 				if (gettype($entry) == 'array') {
 					foreach ($entry as $part) {
 						$newElement = $this->createElementNS(MODS_NS, $elemName,
 							htmlspecialchars($part, ENT_XHTML, 'UTF-8'));
-						$newElement->setAttribute('xml:lang', $locale);
 						$this->setAllAttributes($attrs, $newElement, $parent);
 					}
 				}
 			}
 		} elseif ($data != null && gettype('data') == 'string') {
-			$newElement = $this->createLocalizedElement($data, $new);
+			$newElement = $this->createModsElement($data, $new);
 			$this->setAllAttributes($attrs, $newElement, $parent);
 		}
 	}
@@ -313,11 +305,7 @@ class ModsDOM extends DOMDocument
 			$data = $context->getData($elementName);
 			if ($data) {
 				foreach ($data as $locale => $value) {
-					if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-						$locale = $matches[1];
-					}
 					$elem = $this->createElement($elementName, $value);
-					$elem->setAttribute('xml:lang', $locale);
 					$extension->appendChild($elem);
 				}
 			}

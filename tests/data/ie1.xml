@@ -41,18 +41,18 @@
 				<mets:xmlData>
 					<mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/standards/mods/v3/mods-3-6.xsd" version="3.6">
 						<mods:titleInfo>
-							<mods:title xml:lang="en">article-title-en</mods:title>
+							<mods:title>article-title-en</mods:title>
 						</mods:titleInfo>
 						<mods:name type="personal">
 							<mods:namePart xml:lang="en" type="family">author-lastname</mods:namePart>
 							<mods:namePart xml:lang="en" type="given">author-firstname</mods:namePart>
-							<mods:affiliation xml:lang="en">author-affiliation</mods:affiliation>
+							<mods:affiliation>author-affiliation</mods:affiliation>
 						</mods:name>
 						<mods:recordInfo/>
 						<mods:originInfo/>
 						<mods:relatedItem type="host" displayLabel="Testjournal">
 							<extension>
-								<acronym xml:lang="en">Testjournal</acronym>
+								<acronym>Testjournal</acronym>
 							</extension>
 						</mods:relatedItem>
 					</mods:mods>

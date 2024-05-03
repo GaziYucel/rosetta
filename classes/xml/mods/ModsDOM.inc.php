@@ -12,17 +12,17 @@ define('MODS_NS', 'http://www.loc.gov/mods/v3');
 
 class ModsDOM extends DOMDocument
 {
-		public Context $context;
+	public Context $context;
 
-		public string $locale;
+	public string $locale;
 
-		public DOMElement $record;
+	public DOMElement $record;
 
-		public array $supportedFormLocales;
+	public array $supportedFormLocales;
 
-		private Publication $publication;
+	private Publication $publication;
 
-		public function __construct(Context $context, Publication $publication)
+	public function __construct(Context $context, Publication $publication)
 	{
 		parent::__construct('1.0', 'UTF-8');
 		$this->context = $context;
@@ -31,7 +31,7 @@ class ModsDOM extends DOMDocument
 		$this->createPublication();
 	}
 
-		private function createPublication(): void
+	private function createPublication(): void
 	{
 		$this->createRootElement();
 
@@ -45,32 +45,39 @@ class ModsDOM extends DOMDocument
 		$this->createName();
 
 		//subjects
-		$this->createDataElement('disciplines', $this->publication, $this->record,
-			'subject', array('authority' => 'disciplines'));
-		$this->createDataElement('keywords', $this->publication, $this->record,
-			'subject', array('authority' => 'keywords'));
-		$this->createDataElement('languages', $this->publication, $this->record,
-			'subject', array('authority' => 'languages'));
-		$this->createDataElement('subjects', $this->publication, $this->record,
-			'subject', array('authority' => 'subjects'));
-		$this->createDataElement('supportingAgencies', $this->publication, $this->record,
-			'subject', array('authority' => 'supportingAgencies'));
+
+		$subjects = 'keywords';
+		//TODO add to array
+		// $this->createDataElement('subjects', $this->publication, $this->record, 'subject', array('authority' => 'subjects'));
+		$keywords = $this->publication->getData($subjects);
+		if ($keywords) {
+			$localKeywords = reset($keywords);
+				foreach ($localKeywords as $topic) {
+					$subject = $this->createElementNS(MODS_NS, 'subject');
+					$topic = $this->createElementNS(MODS_NS,'topic', $topic);
+					$topic->setAttribute('authority', $subjects);
+					$subject->appendChild($topic);
+					$this->record->appendChild($subject);
+				}
+		}
+
+
+		$this->createDataElement('disciplines', $this->publication, $this->record, 'subject', array('authority' => 'disciplines'));
+		$this->createDataElement('languages', $this->publication, $this->record, 'subject', array('authority' => 'languages'));
+		$this->createDataElement('supportingAgencies', $this->publication, $this->record, 'subject', array('authority' => 'supportingAgencies'));
 
 		// coverage
-		$this->createDataElement('coverage', $this->publication,
-			$this->record, 'location', array('displayLabel' => 'coverage'));
+		$this->createDataElement('coverage', $this->publication, $this->record, 'location', array('displayLabel' => 'coverage'));
 
 		// rights
-		$this->createDataElement('rights', $this->publication,
-			$this->record, 'accessCondition', array('displayLabel' => 'rights'));
+		$this->createDataElement('rights', $this->publication, $this->record, 'accessCondition', array('displayLabel' => 'rights'));
 
 		// Source
 		$recordInfo = $this->createElementNS(MODS_NS, 'mods:recordInfo');
 		$this->createDataElement('source', $this->publication, $recordInfo, 'recordContentSource');
 
 		// doi
-		$this->createDataElement('pub-id::doi', $this->publication,
-			$this->record, 'identifier', array('type' => 'doi'));
+		$this->createDataElement('pub-id::doi', $this->publication, $this->record, 'identifier', array('type' => 'doi'));
 
 		$languageOfCataloging = $this->createElementNS(MODS_NS, 'mods:languageOfCataloging');
 		#$languageTerm = $this->createDataElement('locale',$this->publication,$languageOfCataloging,'languageTerm');
@@ -88,18 +95,16 @@ class ModsDOM extends DOMDocument
 		$this->createContext($this->context);
 	}
 
-		private function createRootElement(): void
+	private function createRootElement(): void
 	{
 		$this->record = $this->createElementNS(MODS_NS, 'mods:mods');
-		$this->record->setAttributeNS('http://www.w3.org/2000/xmlns/',
-			'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-		$this->record->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance',
-			'schemaLocation', 'http://www.loc.gov/standards/mods/v3/mods-3-6.xsd');
+		$this->record->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+		$this->record->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation', 'http://www.loc.gov/standards/mods/v3/mods-3-6.xsd');
 		$this->record->setAttribute('version', '3.6');
 		$this->appendChild($this->record);
 	}
 
-		private function createTitleInfo(): void
+	private function createTitleInfo(): void
 	{
 		$titleInfo = $this->createElementNS(MODS_NS, 'titleInfo');
 		$titles = $this->publication->getData('title');
@@ -121,7 +126,7 @@ class ModsDOM extends DOMDocument
 		}
 	}
 
-		private function createModsElement(string $value, string $qualifiedName, string $locale = ''): DOMElement
+	private function createModsElement(string $value, string $qualifiedName, string $locale = ''): DOMElement
 	{
 		$node = $this->createElementNS(MODS_NS, $qualifiedName);
 
@@ -141,7 +146,7 @@ class ModsDOM extends DOMDocument
 		return $node;
 	}
 
-		private function createAbstract(): void
+	private function createAbstract(): void
 	{
 		$abstracts = $this->publication->getData('abstract');
 		if ($abstracts) {
@@ -152,7 +157,7 @@ class ModsDOM extends DOMDocument
 		}
 	}
 
-		private function createName(): void
+	private function createName(): void
 	{
 		$authors = $this->publication->getData('authors');
 		foreach ($authors as $author) {
@@ -165,10 +170,9 @@ class ModsDOM extends DOMDocument
 				$authorType = ($authorGivenNameEmpty) ? 'corporate' : 'personal';
 				$nameDom->setAttribute('type', $authorType);
 				if (array_key_exists($locale, $author->getData('familyName'))) {
-					$familyNamePartDom = $this->createElementNS(MODS_NS, 'namePart',
-						$author->getData('familyName')[$locale]);
+					$familyNamePartDom = $this->createElementNS(MODS_NS, 'namePart', $author->getData('familyName')[$locale]);
 					if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-						$shortLocale =  $matches[1];
+						$shortLocale = $matches[1];
 					}
 					$familyNamePartDom->setAttribute('xml:lang', $shortLocale);
 					$familyNamePartDom->setAttribute('type', 'family');
@@ -186,11 +190,7 @@ class ModsDOM extends DOMDocument
 					$nameDom->appendChild($givenNamePartDom);
 				}
 				// Create user properties
-				$properties = array(
-					'affiliation' => 'affiliation',
-					'biography' => 'description',
-					'preferredPublicName' => 'displayForm'
-				);
+				$properties = array('affiliation' => 'affiliation', 'biography' => 'description', 'preferredPublicName' => 'displayForm');
 				foreach ($properties as $key => $value) {
 					$this->createDataElement($key, $author, $nameDom, $value);
 				}
@@ -206,8 +206,7 @@ class ModsDOM extends DOMDocument
 		}
 	}
 
-		public function createDataElement(string $orig, mixed $dataProvider, DOMElement $parent,
-									  string $new = '', array $attrs = []): void
+	public function createDataElement(string $orig, mixed $dataProvider, DOMElement $parent, string $new = '', array $attrs = []): void
 	{
 		$newElement = null;
 		$data = $dataProvider->getData($orig);
@@ -215,14 +214,12 @@ class ModsDOM extends DOMDocument
 			foreach ($data as $locale => $entry) {
 				$elemName = (strlen($new) > 0) ? $new : $orig;
 				if (gettype($entry) == 'string') {
-					$newElement = $this->createElementNS(MODS_NS, $elemName,
-						htmlspecialchars($entry, ENT_XHTML, 'UTF-8'));
+					$newElement = $this->createElementNS(MODS_NS, $elemName, htmlspecialchars($entry, ENT_XHTML, 'UTF-8'));
 					$this->setAllAttributes($attrs, $newElement, $parent);
 				}
 				if (gettype($entry) == 'array') {
 					foreach ($entry as $part) {
-						$newElement = $this->createElementNS(MODS_NS, $elemName,
-							htmlspecialchars($part, ENT_XHTML, 'UTF-8'));
+						$newElement = $this->createElementNS(MODS_NS, $elemName, htmlspecialchars($part, ENT_XHTML, 'UTF-8'));
 						$this->setAllAttributes($attrs, $newElement, $parent);
 					}
 				}
@@ -233,7 +230,7 @@ class ModsDOM extends DOMDocument
 		}
 	}
 
-		private function setAllAttributes(array $attrs, DOMElement $newElement, DOMElement $parent): void
+	private function setAllAttributes(array $attrs, DOMElement $newElement, DOMElement $parent): void
 	{
 		foreach ($attrs as $key => $attr) {
 			$newElement->setAttribute($key, $attr);
@@ -241,12 +238,12 @@ class ModsDOM extends DOMDocument
 		$parent->appendChild($newElement);
 	}
 
-		private function createNameRoles(Author $author, string $locale, DOMElement|false $nameDom): void
+	private function createNameRoles(Author $author, string $locale, DOMElement|false $nameDom): void
 	{
 		$userGroup = $author->getUserGroup();
 		if ($userGroup) {
 			if (preg_match('/^([a-z]{2})_/i', $locale, $matches)) {
-				$locale= $matches[1];
+				$locale = $matches[1];
 			}
 			$role = $this->createElementNS(MODS_NS, 'mods:role');
 			$roleTerm = $this->createElementNS(MODS_NS, 'mods:roleTerm', $userGroup->getName($locale));
@@ -261,7 +258,7 @@ class ModsDOM extends DOMDocument
 		}
 	}
 
-		private function createNameOrcid(Author $author, DOMElement|false $nameDom): void
+	private function createNameOrcid(Author $author, DOMElement|false $nameDom): void
 	{
 		$orcidValue = $author->getData('orcid');
 		if (strlen($orcidValue) > 0) {
@@ -271,7 +268,7 @@ class ModsDOM extends DOMDocument
 		}
 	}
 
-		private function createNameURL(Author $author, DOMElement|false $nameDom): void
+	private function createNameURL(Author $author, DOMElement|false $nameDom): void
 	{
 		$orcidValue = $author->getData('url');
 		if (strlen($orcidValue) > 0) {
@@ -281,7 +278,7 @@ class ModsDOM extends DOMDocument
 		}
 	}
 
-		private function createNameCountry(Author $author, DOMElement|false $nameDom): void
+	private function createNameCountry(Author $author, DOMElement|false $nameDom): void
 	{
 		$orcidValue = $author->getData('country');
 		if (strlen($orcidValue) > 0) {
@@ -291,7 +288,7 @@ class ModsDOM extends DOMDocument
 		}
 	}
 
-		private function createContext(Context $context): void
+	private function createContext(Context $context): void
 	{
 		$relatedItem = $this->createElementNS(MODS_NS, 'relatedItem');
 		$relatedItem->setAttribute('type', 'host');
@@ -316,17 +313,17 @@ class ModsDOM extends DOMDocument
 
 	}
 
-		public function getRecord(): DOMElement
+	public function getRecord(): DOMElement
 	{
 		return $this->record;
 	}
 
-		public function getPublication(): Publication
+	public function getPublication(): Publication
 	{
 		return $this->publication;
 	}
 
-		public function setPublication(Publication $publication): void
+	public function setPublication(Publication $publication): void
 	{
 		$this->publication = $publication;
 	}

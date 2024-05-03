@@ -28,6 +28,7 @@ class TestPublication extends Publication
 		$this->setData('title', 'article-title-en', $submission->getLocale());
 		$this->setData('authors', $this->createAuthors());
 		$this->setData('datePublished', '2023-12-25');
+		$this->setData('keywords', ['keyword1','keyword2'],'en_US');
 		return $this;
 
 	}

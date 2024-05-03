@@ -82,7 +82,7 @@ class ModsDOM extends DOMDocument
 		$languageOfCataloging = $this->createElementNS(MODS_NS, 'mods:languageOfCataloging');
 		#$languageTerm = $this->createDataElement('locale',$this->publication,$languageOfCataloging,'languageTerm');
 		#$recordInfo->appendChild($languageTerm);
-		$this->record->appendChild($recordInfo);
+		#$this->record->appendChild($recordInfo);
 
 		// publisher
 		$originInfo = $this->createElementNS(MODS_NS, 'mods:originInfo');
@@ -294,7 +294,7 @@ class ModsDOM extends DOMDocument
 		$relatedItem->setAttribute('type', 'host');
 		$relatedItem->setAttribute('displayLabel', $context->getData('acronym', 'en_US'));
 		$this->record->appendChild($relatedItem);
-		$extension = $this->createElement('extension');
+		$extension = $this->createElementNS(MODS_NS,'extension');
 		$relatedItem->appendChild($extension);
 		$elementNames = array('abbreviation', 'acronym', 'authorInformation', 'clocksLicense', 'customHeaders', 'librarianInformation', 'lockssLicense', 'openAccessPolicy', 'privacyStatement', 'readerInformation', 'searchDescription', 'supportedLocales', 'supportedSubmissionLocales');
 

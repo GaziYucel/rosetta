@@ -54,12 +54,11 @@
 						<mods:subject>
 							<mods:topic authority="keywords">keyword2</mods:topic>
 						</mods:subject>
-						<mods:recordInfo/>
 						<mods:originInfo/>
 						<mods:relatedItem type="host" displayLabel="Testjournal">
-							<extension>
+							<mods:extension>
 								<acronym>Testjournal</acronym>
-							</extension>
+							</mods:extension>
 						</mods:relatedItem>
 					</mods:mods>
 				</mets:xmlData>

@@ -141,7 +141,7 @@ class RosettaDCDom extends DOMDocument
 		$issue = $issueDao->getById($this->publication->getData('issueId'), $this->context->getId());
 		if ($issue) {
 			$rosettaIssue = 'Open Access E-Journals/TIB OP/' . $issn . '/' . $issue->getData('year') . '/' .
-				$issue->getData('volume') . '/' . $issue->getData('id') . '/';
+				$issue->getData('volume') . '/' . $issue->getData('id') ;
 			$this->createQualifiedElement('dcterms:isPartOf', $rosettaIssue);
 		}
 		else {
@@ -184,7 +184,7 @@ class RosettaDCDom extends DOMDocument
 		$node = $this->createElement('dc:identifier', htmlspecialchars(
 			'DOI:' . $this->publication->getStoredPubId('doi'), ENT_COMPAT, 'UTF-8'));
 		$typeAttribute = $this->createAttribute('xsi:type');
-		$typeAttribute->value ='URI' ;
+		$typeAttribute->value ='dcterms:URI' ;
 		$node->appendChild($typeAttribute);
 
 		$this->record->appendChild($node);
